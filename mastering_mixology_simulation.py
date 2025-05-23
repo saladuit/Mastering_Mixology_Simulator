@@ -3,7 +3,8 @@ from itertools import product
 from collections import defaultdict
 import csv
 import argparse
-
+import os
+import shutil
 # === Setup ===
 
 class Potion:
@@ -43,8 +44,6 @@ def bonus_for_count(n):
     return {1:1.0, 2:1.2, 3:1.4}[n]
 
 def run_baseline_simulation(draw_to_choice_map, runs=100000):
-    all_draws = list(set(tuple(sorted(draw)) for draw in product(potion_ids, repeat=3)))
-
     all_run_data = []
     aggregate_potion_counts = defaultdict(int)
 
@@ -106,16 +105,28 @@ def run_baseline_simulation(draw_to_choice_map, runs=100000):
         "lye": sum(lye_list) / runs,
     }
 
+    # === Prepare Output Directory ===
+    strategy_basename = os.path.splitext(os.path.basename(args.strategy_file))[0]
+    output_dir = os.path.join("strategies", strategy_basename)
+    os.makedirs(output_dir, exist_ok=True)
+
+    # Copy the strategy file into the output directory
+    shutil.copy2(args.strategy_file, os.path.join(output_dir, os.path.basename(args.strategy_file)))
+
     # === Write Detailed Run Data ===
-    with open("run_data.csv", "w", newline="") as csvfile:
+    run_data_path = os.path.join(output_dir, "run_data.csv")
+    # === Write Detailed Run Data ===
+    with open(run_data_path, "w", newline="") as csvfile:
         fieldnames = ["total_potions", "mox", "aga", "lye"] + potion_ids
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         for run in all_run_data:
             writer.writerow(run)
-
+        print(f"Run data saved to {run_data_path}")
+    
+    summary_path = os.path.join(output_dir, "summary.csv")
     # === Write Summary Statistics ===
-    with open("summary.csv", "w", newline="") as csvfile:
+    with open(summary_path, "w", newline="") as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(["Metric", "Value"])
 
@@ -141,9 +152,10 @@ def run_baseline_simulation(draw_to_choice_map, runs=100000):
                 f"{min_run['mox']},{min_run['aga']},{min_run['lye']}",
                 f"{max_run['mox']},{max_run['aga']},{max_run['lye']}"
             ])
+        print(f"Summary statistics saved to {summary_path}")
 
     # === Console Report ===
-    print("\n=== Baseline Simulation Summary ===")
+    print(f"\n=== Simulation Summary for Strategy File: {args.strategy_file} ===")
     print(f"Runs: {runs}")
     print(f"Average Potions Used to Reach Target: {avg_potions_used:.2f}")
     print("Average Potion Usage per Type:")
