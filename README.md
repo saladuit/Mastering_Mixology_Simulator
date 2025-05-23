@@ -69,7 +69,7 @@ AAA-AAM-MAL,AAM-MAL
 This means:
 For the draw AAA-AAM-MAL, create the potions AAM and MAL (in one turn for the bonus).
 
-##💡 You can:
+## 💡 You can:
 * Use any potion subset of size 1–3 from the draw
 * Preserve full orders (e.g. AAA-AAM-MAL,AAA-AAM-MAL) for testing base cases
 ## 🚫 You must NEVER: 
