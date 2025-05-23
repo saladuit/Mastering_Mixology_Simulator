@@ -2,6 +2,7 @@ import random
 from itertools import product
 from collections import defaultdict
 import csv
+import argparse
 
 # === Setup ===
 
@@ -170,8 +171,23 @@ def generate_draw_template(filepath="draw_choices.csv"):
         for draw in sorted(all_draws):
             draw_key = "-".join(draw)
             writer.writerow([draw_key, "-".join(draw)])
-if __name__ == "__main__":
-    draw_to_choice_map = load_draw_choices_from_csv("draw_strategies/Try_to_keep_big_L_ratio.csv")
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Run the Mastering Mixology simulation.")
+    parser.add_argument(
+        "strategy_file",
+        type=str,
+        help="Path to your strategy CSV file (e.g., strategy.csv).\nAfter running it will create a folder in strategies and it will copy your current strategy to that folder and store the results."
+    )
+    parser.add_argument(
+        "number_of_runs",
+        type=int,
+        nargs="?",
+        default=100000,
+        help="Number of simulation runs to perform (default: 100000)"
+    )
+    args = parser.parse_args()
     # generate_draw_template()
+
+    draw_to_choice_map = load_draw_choices_from_csv("draw_strategies/Try_to_keep_big_L_ratio.csv")
     run_baseline_simulation(draw_to_choice_map, runs=100000)
