@@ -83,3 +83,41 @@ Currently my best result is: Average Potions Used,4678.46
 
 ### Output
 The simulation will automatically create a new folder in csv_archive with the name you've given to the file. In that folder you will find two files. `run_data.csv` and `summary.csv`. I think that most people just want to look at the latter one. There you can find usefull stats about the run. Let me know if you want to see more statistics.
+
+### Recommendation
+If you try to improve an existing strategy. Create a file name called: 1.1_complete_full_orders. In that way you can still compare the data from previous versions.
+
+# Current Strategies Descriptions
+## 1_complete_full_orders
+Just create every single potion for every given order.
+Result: `Average Potions Used,5289.53`
+## 2_skip_triples_unless_MAL
+When either "AAA", "MMM", "LLL" are in the order. only create them when they are part of an MAL order.
+Example
+```
+AAA-MAL-MMM,AAA-MAL-MMM # We create the full order, because MAL is in the recipe.
+AAA-MLL-MLL,MLL-MLL # We skip it because there is no MAL in the order
+```
+Result: `Average Potions Used,5060.33`
+## 3_skip_double_aga_less_points
+I used strategy 2 and added that I'd skip every double aga potion when it wasn't part of a MAL potion.
+(When writing this I see that I wasn't very consistent sticking to this strategy).
+Example
+```
+AAM-MLL-MMM,MLL # we skip AAM, because we over produce aga in the previous test result. I is also not part of a MAL order.
+```
+Result: `Average Potions Used,4851.29`
+## 4_triple_order_if_lye_4plus
+I used strategy 2 and 3 and the also applied the strategy which creates a triple order if the letter L is at least four times in the order. I do have to state that "LLL" counts as only 2, as it only adds 20 lye to the order.
+(While creating this strategy I still counted "LLL" as 3, instead of 2 -> it only adds twenty lye and not thirty.)
+```
+# We create the full order as there are at least 4 L's
+ALL-MML-MML,ALL-MML-MML
+```
+
+Result: `Average Potions Used,4678.46`
+## 5_lye_over_mox_over_aga_ratio
+This last strategy I'm working on builds on top of strategies 2 to 4. In this strategy I also try to add orders which have a equal or favourable ratio between mox, aga and lye. For example, if the draw is "AAA-LLL-MML" it would add 24 aga, 38 L's and 24 M's, I will create all three, due to L's being more prevalentand there are not more A's, than M's.
+
+Result: `Average Potions Used,4719.60`
+I'm quite sure I've not created this strategy perfectly, as the average potions made are higher than strategy 4.

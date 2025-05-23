@@ -1,7 +1,0 @@
-line 15 AAM or LLL
-line 20 AAM or MMM
-line 21 ALA or ALA-ALA
-line 22 ALL or ALA-ALL
-line 107
-
-Perhaps add more LLL's
