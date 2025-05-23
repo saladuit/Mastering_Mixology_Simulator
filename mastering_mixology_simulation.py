@@ -49,8 +49,6 @@ def run_baseline_simulation(draw_to_choice_map, runs=100000):
 
     for _ in range(runs):
         # Progress bar
-        if _ % (runs // 10) == 0:
-            print(f"Progress: {(_ / runs) * 100:.2f}%")
         current = {"mox": 0, "aga": 0, "lye": 0}
         potion_counts = defaultdict(int)
         total_potions_used = 0
@@ -84,6 +82,8 @@ def run_baseline_simulation(draw_to_choice_map, runs=100000):
 
         for pid in potion_ids:
             aggregate_potion_counts[pid] += potion_counts[pid]
+        if _ % max(1, runs // 10) == 0:
+            print(f"Progress: {(_ / runs) * 100:.2f}%")
 
     # === Summary Statistics ===
     total_potions_list = [run["total_potions"] for run in all_run_data]
@@ -204,5 +204,5 @@ if __name__ == "__main__":
     # Print number of runs
     print(f"Using strategy file: {args.strategy_file}")
     print(f"Number of runs: {args.number_of_runs}")
-    # draw_to_choice_map = load_draw_choices_from_csv(args.strategy_file_csv)
-    # run_baseline_simulation(draw_to_choice_map, runs=args.number_of_runs)
+    draw_to_choice_map = load_draw_choices_from_csv(args.strategy_file)
+    run_baseline_simulation(draw_to_choice_map, runs=args.number_of_runs)
