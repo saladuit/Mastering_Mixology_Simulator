@@ -1,3 +1,6 @@
+# Folders that should be ignore by git
+strategy_template/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
