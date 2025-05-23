@@ -163,6 +163,7 @@ def load_draw_choices_from_csv(filepath):
             choice = row['choice'].split('-')
             draw_to_choice_map[draw] = choice
     return draw_to_choice_map
+
 def generate_draw_template(filepath="draw_choices.csv"):
     all_draws = set(tuple(sorted(draw)) for draw in product(potion_ids, repeat=3))
     with open(filepath, "w", newline='') as csvfile:
@@ -188,6 +189,8 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     # generate_draw_template()
-
-    draw_to_choice_map = load_draw_choices_from_csv("draw_strategies/Try_to_keep_big_L_ratio.csv")
-    run_baseline_simulation(draw_to_choice_map, runs=100000)
+    # Print number of runs
+    print(f"Using strategy file: {args.strategy_file}")
+    print(f"Number of runs: {args.number_of_runs}")
+    # draw_to_choice_map = load_draw_choices_from_csv(args.strategy_file_csv)
+    # run_baseline_simulation(draw_to_choice_map, runs=args.number_of_runs)
